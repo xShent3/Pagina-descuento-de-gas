@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Eliminación</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f8ff; /* Fondo azul claro */
+            color: #333; /* Texto en un tono oscuro para contraste */
+        }
+        .navbar {
+            background-color: #007bff; /* Azul intenso */
+        }
+        .navbar-brand, .nav-link {
+            color: #fff !important; /* Color de texto blanco en el navbar */
+        }
+        .nav-link:hover {
+            background-color: #0056b3; /* Azul más oscuro en hover */
+            border-radius: 5px;
+        }
+        h1, h2 {
+            color: #0056b3; /* Azul oscuro para los encabezados */
+        }
+        .text-center {
+            margin-bottom: 20px;
+        }
+        img {
+            display: block;
+            margin: 20px auto;
+            width: 50%; /* Tamaño medio */
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para un efecto minimalista */
+        }
+        .btn {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .btn:hover {
+            background-color: #003f7f;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="{% url 'home' %}">Pagina gas</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ver_perfil' user.id %}">Mi perfil</a>
+                    </li>
+                    {% if user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listar_solicitudes' %}">Ver solicitudes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listar_usuarios' %}">Ver perfiles de usuarios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'crear_usuario' %}">Registro de usuarios</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'buscar_solicitud' %}">Buscar solicitud</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'crear_solicitud' %}">Ingresar solicitud</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav" style="margin-left: auto;"> <!-- Esto empuja los elementos a la derecha -->
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'cerrar_sesion' %}" class="btn nav-link">Cerrar sesión</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'iniciar_sesion' %}" class="btn nav-link">Iniciar sesión</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1 class="text-center">Confirmar Eliminación</h1>
+        <p class="text-center">¿Estás seguro de que deseas eliminar la solicitud de <strong>{{ solicitud.nombre }}</strong>?</p>
+        <form method="POST" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+            <a href="{% url 'listar_solicitudes' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

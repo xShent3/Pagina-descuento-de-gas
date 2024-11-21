@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Solicitud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f8ff; /* Fondo azul claro */
+            color: #333; /* Texto en un tono oscuro para contraste */
+        }
+        .navbar {
+            background-color: #007bff; /* Azul intenso */
+        }
+        .navbar-brand, .nav-link {
+            color: #fff !important; /* Color de texto blanco en el navbar */
+        }
+        .nav-link:hover {
+            background-color: #0056b3; /* Azul más oscuro en hover */
+            border-radius: 5px;
+        }
+        h1, h2 {
+            color: #0056b3; /* Azul oscuro para los encabezados */
+        }
+        .text-center {
+            margin-bottom: 20px;
+        }
+        img {
+            display: block;
+            margin: 20px auto;
+            width: 50%; /* Tamaño medio */
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para un efecto minimalista */
+        }
+        .btn {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .btn:hover {
+            background-color: #003f7f;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="{% url 'home' %}">Pagina gas</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'listar_solicitudes' %}">Ver solicitudes</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'buscar_solicitud' %}">Buscar solicitud</a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ver_perfil' user.id %}">Perfil</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'crear_solicitud' %}">Ingresar solicitud</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'cerrar_sesion' %}" class="btn nav-link">Cerrar sesión</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'iniciar_sesion' %}" class="btn nav-link">Iniciar sesión</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h2>Crear nueva solicitud</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="rut">RUT:</label>
+                <input 
+                type="text" 
+                class="form-control" 
+                id="rut" 
+                name="rut" 
+                required 
+                pattern="^\d{6,8}-[\dKk]{1}$" 
+                title="El RUT debe tener entre 8 y 10 caracteres, con 6 a 8 números, un guion y un dígito o la letra K al final."
+            >
+            </div>
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required     pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ]{2,}$" 
+                title="El nombre debe tener al menos 2 caracteres y no puede contener números ni caracteres especiales." />
+            </div>
+            <div class="form-group">
+                <label for="apellido">Apellido:</label>
+                <input type="text" class="form-control" id="apellido" name="apellido" required                    pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ]{2,}$" 
+                title="El apellido debe tener al menos 2 caracteres y no puede contener números ni caracteres especiales." />
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <input type="text" class="form-control" id="direccion" name="direccion" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono:</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="telefono" 
+                    name="telefono" 
+                    required 
+                    pattern="^\d+$" 
+                    title="El número de teléfono solo debe contener números."
+                >
+            </div>
+            <div class="form-group">
+                <label for="comuna">Comuna:</label>
+                <select class="form-control" id="comuna" name="comuna" required>
+                    <option value="" disabled selected>Seleccione una comuna</option>
+                    <option value="Valdivia">Valdivia</option>
+                    <option value="Corral">Corral</option>
+                    <option value="Lanco">Lanco</option>
+                    <option value="Los Lagos">Los Lagos</option>
+                    <option value="Máfil">Máfil</option>
+                    <option value="Mariquina">Mariquina</option>
+                    <option value="Paillaco">Paillaco</option>
+                    <option value="Panguipulli">Panguipulli</option>
+                    <option value="La Unión">La Unión</option>
+                    <option value="Futrono">Futrono</option>
+                    <option value="Lago Ranco">Lago Ranco</option>
+                    <option value="Río Bueno">Río Bueno</option>
+                </select>
+            </div>
+            <br>
+            <button type='submit' class='btn btn-primary'>Enviar</button> 
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> 
+</body>
+</html>
